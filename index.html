@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Old Greg's Tavern - Local Edition</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <header class="game-header">
+            <h1>🏰 Old Greg's Tavern</h1>
+            <div class="header-actions">
+                <button id="saveBtn" class="btn btn-secondary">Save Game</button>
+                <button id="loadBtn" class="btn btn-secondary">Load Game</button>
+                <button id="newGameBtn" class="btn btn-secondary">New Game</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <section class="character-panel">
+                    <h2>Character</h2>
+                    <div class="character-info">
+                        <div class="char-name" id="charName">Adventurer</div>
+                        <div class="char-level">Level <span id="charLevel">1</span></div>
+                        <div class="char-exp">
+                            <div class="exp-bar">
+                                <div class="exp-fill" id="expFill"></div>
+                            </div>
+                            <span id="expText">0 / 100 XP</span>
+                        </div>
+                        <div class="char-stats">
+                            <div class="stat">
+                                <span class="stat-label">Health:</span>
+                                <span id="charHealth">100</span> / <span id="charMaxHealth">100</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Gold:</span>
+                                <span id="charGold">50</span>
+                            </div>
+                        </div>
+                        <div class="dnd-stats" id="charStats">
+                            <!-- D&D Stats will be populated here -->
+                        </div>
+                        <div class="skill-modifiers">
+                            <div class="stat">
+                                <span class="stat-label">Intimidation:</span>
+                                <span id="charIntimidation">+1</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Persuasion:</span>
+                                <span id="charPersuasion">+1</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="inventory-panel">
+                    <h2>Inventory</h2>
+                    <div class="inventory-list" id="inventoryList">
+                        <div class="empty-inventory">Empty</div>
+                    </div>
+                </section>
+
+                <section class="party-panel">
+                    <h2>Party</h2>
+                    <div class="party-list" id="partyList">
+                        <div class="empty-party">No companions</div>
+                    </div>
+                </section>
+
+                <section class="quest-panel">
+                    <h2>Quest Log</h2>
+                    <div class="quest-list-sidebar" id="questListSidebar">
+                        <div class="empty-quests">No active quests</div>
+                    </div>
+                </section>
+            </aside>
+
+            <main class="game-area">
+                <div class="chat-main-container">
+                    <div class="chat-header">
+                        <h2>Your Adventure</h2>
+                        <button class="btn btn-secondary" id="aiConfigBtn">⚙️ AI Settings</button>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message system">
+                            <strong>Welcome to Old Greg's Tavern!</strong><br><br>
+                            You can do anything you want in this world. Type what you'd like to do, say, or explore. 
+                            The AI will respond and help shape your adventure. Try things like:
+                            <ul style="margin-top: 8px; padding-left: 20px;">
+                                <li>"I want to explore the tavern"</li>
+                                <li>"I'll talk to the bartender"</li>
+                                <li>"Let me check my inventory"</li>
+                                <li>"I want to go to the market"</li>
+                                <li>Or anything else you can imagine!</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Type anything you want to do, say, or explore..." autofocus />
+                        <button id="chatSendBtn" class="btn btn-primary">Send</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- NPC Interaction Modal -->
+    <div class="modal" id="npcModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <div id="npcModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Quest Modal -->
+    <div class="modal" id="questModal">
+        <div class="modal-content">
+            <span class="close" id="closeQuestModal">&times;</span>
+            <div id="questModalContent"></div>
+        </div>
+    </div>
+
+    <!-- Character Creation Modal -->
+    <div class="modal" id="characterCreationModal">
+        <div class="modal-content character-creation-content">
+            <h2>Create Your Character</h2>
+            <p class="creation-subtitle">Begin your adventure by creating your unique character</p>
+            
+            <div class="creation-form">
+                <div class="config-section">
+                    <label for="charNameInput">Character Name:</label>
+                    <input type="text" id="charNameInput" class="config-input" placeholder="Enter your character's name..." maxlength="30" />
+                </div>
+                
+                <div class="config-section">
+                    <label for="charClass">Class:</label>
+                    <select id="charClass" class="config-input">
+                        <option value="">Select a class...</option>
+                        <option value="fighter">Fighter - Master of weapons and armor</option>
+                        <option value="rogue">Rogue - Stealthy and skilled with daggers</option>
+                        <option value="wizard">Wizard - Master of arcane magic</option>
+                        <option value="cleric">Cleric - Divine healer and protector</option>
+                        <option value="ranger">Ranger - Expert tracker and archer</option>
+                        <option value="paladin">Paladin - Holy warrior of justice</option>
+                        <option value="barbarian">Barbarian - Fierce warrior of the wilds</option>
+                        <option value="bard">Bard - Charismatic performer and spellcaster</option>
+                        <option value="monk">Monk - Disciplined martial artist</option>
+                        <option value="warlock">Warlock - Pact-bound spellcaster</option>
+                    </select>
+                    <div id="classDescription" class="class-description"></div>
+                </div>
+                
+                <div class="config-section">
+                    <label for="charAppearance">Physical Appearance:</label>
+                    <textarea id="charAppearance" class="config-input" rows="3" placeholder="Describe your character's appearance (height, build, hair, eyes, distinctive features...)"></textarea>
+                    <small>How does your character look? This will be part of your story.</small>
+                </div>
+                
+                <div class="config-section">
+                    <label for="charBackstory">Backstory:</label>
+                    <textarea id="charBackstory" class="config-input" rows="4" placeholder="Tell your character's story... Where are they from? What brought them here? What drives them?"></textarea>
+                    <small>Your character's history and motivations. This shapes your adventure!</small>
+                </div>
+                
+                <div class="creation-actions">
+                    <button class="btn btn-primary" id="createCharacterBtn">Create Character & Start Adventure</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Config Modal -->
+    <div class="modal" id="aiConfigModal">
+        <div class="modal-content">
+            <span class="close" id="closeAIConfigModal">&times;</span>
+            <h2>AI Configuration</h2>
+            <div class="config-section">
+                <label for="apiProvider">AI Provider:</label>
+                <select id="apiProvider" class="config-input">
+                    <option value="openai">OpenAI (GPT)</option>
+                    <option value="anthropic">Anthropic (Claude)</option>
+                    <option value="local">Local/Offline (Coming Soon)</option>
+                </select>
+            </div>
+            <div class="config-section">
+                <label for="apiKey">API Key:</label>
+                <input type="password" id="apiKey" class="config-input" placeholder="Enter your API key..." />
+                <small>Your API key is stored locally and never sent to our servers.</small>
+            </div>
+            <div class="config-section">
+                <label for="aiCreativity">AI Creativity (Temperature):</label>
+                <input type="range" id="aiCreativity" min="0" max="100" value="70" class="config-slider" />
+                <span id="creativityValue">70</span>
+                <small>Higher values = more creative/unpredictable responses</small>
+            </div>
+            <div class="config-section">
+                <button class="btn btn-primary" id="saveAIConfigBtn">Save Configuration</button>
+                <button class="btn btn-secondary" id="testAIConfigBtn">Test Connection</button>
+            </div>
+            <div id="aiConfigStatus" class="config-status"></div>
+        </div>
+    </div>
+
+    <script src="ai-integration.js"></script>
+    <script src="combat-system.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
+
