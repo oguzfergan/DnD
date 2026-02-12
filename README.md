@@ -1,4 +1,4 @@
-# Old Greg's Tavern - Local Edition
+# DnD- Local Edition
 
 A single-player, offline RPG game inspired by Old Greg's Tavern. Play locally with AI-powered NPCs for dynamic, unpredictable conversations!
 
